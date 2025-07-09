@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Boston FM Interactive Dial</title>
+  <style>
+    body { background: #111; color: #eee; font-family: sans-serif; text-align: center; padding-top: 30px; }
+    #dial { width: 450px; height: 450px; margin: 40px auto; border: 10px solid #444; border-radius:50%; box-shadow: 0 0 25px #f33; position: relative; }
+    .station { position: absolute; width: 18px; height: 18px; background: #f33; border-radius:50%; cursor:pointer; box-shadow:0 0 12px #f33; transition:0.2s; }
+    .station:hover { transform: scale(1.5); }
+    #info { margin-top: 15px; font-size:1.2em; }
+    audio { margin-top: 10px; width: 90%; max-width:500px; }
+  </style>
+</head>
+<body>
+<h1>🎙️ Boston FM Interactive Dial</h1>
+<div id="dial"></div>
+<div id="info">Click a station to play</div>
+<audio id="player" controls></audio>
+
+<script>
+const stations = [
+  {name:'WGBH 89.7',freq:89.7,url:'https://wgbh-live.streamguys1.com/wgbh'},
+  {name:'CRB 99.5',freq:99.5,url:'https://wgbh-live.streamguys1.com/classical-hi/'},
+  {name:'WERS 88.9',freq:88.9,url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WERSFM.mp3'},
+  {name:'WBUR 90.9',freq:90.9,url:'https://wbur-sc.streamguys1.com/wbur.mp3'},
+  {name:'WUMB 91.9',freq:91.9,url:'https://wumb.streamguys1.com/wumb919fast.mp3'},
+  {name:'WZBC 90.3',freq:90.3,url:'https://ice6.securenetsystems.net/WZBCFM'},
+  {name:'WXRV 92.5',freq:92.5,url:'https://stream.revma.ihrhls.com/zc8921'},
+  {name:'WBOS 92.9',freq:92.9,url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WBOSFM.mp3'},
+  {name:'WJMN 94.5',freq:94.5,url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WJMNFM.mp3'},
+  {name:'WZRM 97.7',freq:97.7,url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WZRMRDHD2.mp3'},
+  {name:'WBGB 103.3',freq:103.3,url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WBGBFM.mp3'},
+  {name:'WMJX 106.7',freq:106.7,url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WMJXFM.mp3'}
+];
+
+const dial = document.getElementById('dial'),
+      player = document.getElementById('player'),
+      info = document.getElementById('info');
+
+stations.forEach(st => {
+  const angle = (st.freq - 88) / (107.9 - 88) * 360;
+  const rad = angle * Math.PI/180;
+  const x = 225 + 190 * Math.cos(rad) - 9;
+  const y = 225 + 190 * Math.sin(rad) - 9;
+  const el = document.createElement('div');
+  el.className = 'station';
+  el.title = st.name;
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  el.onclick = () => {
+    player.src = st.url;
+    player.play();
+    info.textContent = `🔊 Now playing: ${st.name}`;
+  };
+  dial.appendChild(el);
+});
+</script>
+</body>
+</html>
