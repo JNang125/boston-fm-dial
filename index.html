@@ -1,69 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Boston FM + AM Interactive Dial</title>
-  <style>
-    body {
-      background: #111;
-      color: #eee;
-      font-family: sans-serif;
-      text-align: center;
-      padding-top: 30px;
-    }
-    #dial {
-      width: 450px;
-      height: 450px;
-      margin: 40px auto;
-      border: 10px solid #444;
-      border-radius: 50%;
-      box-shadow: 0 0 25px #f33;
-      position: relative;
-    }
-    .station {
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      background: #f33;
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 0 12px #f33;
-      transition: 0.2s;
-    }
-    .station:hover {
-      transform: scale(1.5);
-    }
-    #info {
-      margin-top: 15px;
-      font-size: 1.2em;
-    }
-    audio {
-      margin-top: 10px;
-      width: 90%;
-      max-width: 500px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>Boston FM Interactive Dial</title>
+<style>
+  body { background:#111; color:#eee; font-family:sans-serif; text-align:center; padding-top:30px;}
+  #dial { width:450px; height:450px; margin:40px auto; border:10px solid #444; border-radius:50%; box-shadow:0 0 25px #f33; position:relative;}
+  .station { position:absolute; width:18px; height:18px; background:#f33; border-radius:50%; cursor:pointer; box-shadow:0 0 12px #f33; transition:0.2s;}
+  .station:hover { transform:scale(1.5);}
+  #info { margin-top:15px; font-size:1.2em;}
+  audio { margin-top:10px; width:90%; max-width:500px;}
+</style>
 </head>
 <body>
-  <h1>🎙️ Boston FM + AM Interactive Dial</h1>
+  <h1>🎙️ Boston FM Interactive Dial</h1>
   <div id="dial"></div>
   <div id="info">Click a station to play</div>
   <audio id="player" controls></audio>
-
 <script>
   const stations = [
-    // FM stations
-    {name:'WERS 88.9 FM', freq: 88.9, url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WERSFM.mp3'},
-    {name:'WGBH 89.7 FM', freq: 89.7, url:'https://wgbh-live.streamguys1.com/wgbh'},
-    {name:'WBUR 90.9 FM', freq: 90.9, url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WBURFM.mp3'},
-    {name:'WBOS 92.9 FM', freq: 92.9, url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WBOSFM.mp3'},
-    {name:'WJMN 94.5 FM', freq: 94.5, url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WJMNFM_AAC'},
-    {name:'WMJX 106.7 FM', freq: 106.7, url:'https://live.wmjx.com/stream'},
-
-    // AM stations
-    {name:'WRKO 680 AM', freq: 68.0, url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WRKOAM.mp3'},
-    {name:'WBZ 1030 AM', freq: 103.0, url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WBZAM.mp3'},
-    {name:'WAMG 890 AM', freq: 89.0, url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WAMGAM.mp3'}
+    {name:'WERS 88.9 FM', freq:88.9, url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WERSFM.mp3'},
+    {name:'WGBH 89.7 FM', freq:89.7, url:'https://wgbh-live.streamguys1.com/wgbh'},
+    {name:'WBOS 92.9 FM', freq:92.9, url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WBOSFM.mp3'}
   ];
 
   const dial = document.getElementById('dial');
@@ -71,41 +29,23 @@
   const info = document.getElementById('info');
 
   stations.forEach(st => {
-    // Map frequency (FM: 88-108, AM scaled roughly 50-170) to degrees on dial
-    // We'll scale AM frequencies approx (AM: 50 to 170) to the dial range [0-360]
-    const freqRangeMin = 88;
-    const freqRangeMax = 108;
-    const amFreqMin = 50;
-    const amFreqMax = 170;
-    let angle;
-    if(st.freq >= 88){
-      // FM frequency, scale 88-108
-      angle = (st.freq - freqRangeMin) / (freqRangeMax - freqRangeMin) * 360;
-    } else {
-      // AM frequency, scale 50-170
-      angle = (st.freq - amFreqMin) / (amFreqMax - amFreqMin) * 360;
-    }
-
+    const angle = (st.freq - 88) / (108 - 88) * 360;
     const rad = angle * Math.PI / 180;
     const x = 225 + 190 * Math.cos(rad) - 9;
     const y = 225 + 190 * Math.sin(rad) - 9;
-
     const el = document.createElement('div');
     el.className = 'station';
     el.title = st.name;
     el.style.left = x + 'px';
     el.style.top = y + 'px';
-
     el.onclick = () => {
       player.src = st.url;
       player.play();
       info.textContent = `🔊 Now playing: ${st.name}`;
     };
-
     dial.appendChild(el);
   });
 </script>
 </body>
 </html>
-
 
