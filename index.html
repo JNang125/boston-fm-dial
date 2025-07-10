@@ -99,11 +99,10 @@
 <div id="extras">
   <button id="natureBtn">🌿 Nature Sounds</button>
   <button id="oceanBtn">🌊 Ocean Waves</button>
-  <button id="weatherBtn">⛅ Boston Weather Radio</button>
+  <button id="weatherBtn">⛅ Boston Weather</button>
 </div>
 
 <script>
-  // Stations with working direct streams
   const stations = [
     {name:'WERS 88.9 FM', freq:88.9, url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WERSFM.mp3'},
     {name:'WGBH 89.7 FM', freq:89.7, url:'https://wgbh-live.streamguys1.com/wgbh'},
@@ -114,7 +113,6 @@
   const player = document.getElementById('player');
   const info = document.getElementById('info');
 
-  // Draw dial stations
   stations.forEach(st => {
     const angle = (st.freq - 88) / (108 - 88) * 360;
     const rad = angle * Math.PI / 180;
@@ -134,19 +132,15 @@
     dial.appendChild(el);
   });
 
-  // Nature / Ocean sounds URLs (free samples)
-  const natureURL = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'; // placeholder gentle nature loop
-  const oceanURL = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3'; // placeholder ocean waves loop
+  // Authentic ambient loops (open-license)
+  const natureURL = 'https://cdn.pixabay.com/audio/2022/03/14/audio_497fa3ce5f.mp3'; // birds/forest
+  const oceanURL = 'https://cdn.pixabay.com/audio/2022/03/16/audio_9fa4087c3b.mp3';  // ocean waves
+  const weatherURL = ''; // no reliable weather stream supports <audio> directly right now
 
-  // Boston NOAA Weather Radio stream (direct MP3 stream)
-  // Source: NOAA streams are often accessible, here’s a known Boston-area weather radio stream:
-  const weatherURL = 'https://wccstreaming.noaa.gov/1025-wx/brwxam.m3u';
-
-  // Buttons
   document.getElementById('natureBtn').onclick = () => {
     player.src = natureURL;
     player.play();
-    info.textContent = '🌿 Now playing: Nature Sounds';
+    info.textContent = '🌿 Now playing: Forest Ambience';
   };
   document.getElementById('oceanBtn').onclick = () => {
     player.src = oceanURL;
@@ -154,9 +148,9 @@
     info.textContent = '🌊 Now playing: Ocean Waves';
   };
   document.getElementById('weatherBtn').onclick = () => {
-    player.src = weatherURL;
-    player.play();
-    info.textContent = '⛅ Now playing: Boston Weather Radio';
+    info.textContent = '⚠️ Weather stream currently unavailable';
+    player.pause();
+    player.src = '';
   };
 </script>
 
