@@ -61,6 +61,7 @@
     outline: none;
     border-radius: 8px;
     box-shadow: 0 0 12px #ff3366bb;
+    display: block;
   }
   #extras {
     margin-top: 38px;
@@ -85,6 +86,16 @@
   button:hover {
     background: #ff5577;
   }
+  #weatherFrame {
+    width: 100%;
+    max-width: 540px;
+    height: 120px;
+    margin-top: 25px;
+    display: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 16px #444;
+  }
 </style>
 </head>
 <body>
@@ -102,6 +113,13 @@
   <button id="weatherBtn">⛅ Boston Weather</button>
 </div>
 
+<iframe
+  id="weatherFrame"
+  src="https://www.broadcastify.com/listen/feed/21790/web"
+  frameborder="0"
+  scrolling="no"
+></iframe>
+
 <script>
   const stations = [
     {name:'WERS 88.9 FM', freq:88.9, url:'https://playerservices.streamtheworld.com/api/livestream-redirect/WERSFM.mp3'},
@@ -112,6 +130,11 @@
   const dial = document.getElementById('dial');
   const player = document.getElementById('player');
   const info = document.getElementById('info');
+  const weatherFrame = document.getElementById('weatherFrame');
+
+  // Nature & Ocean loops (open license)
+  const natureURL = 'https://cdn.pixabay.com/audio/2022/03/14/audio_497fa3ce5f.mp3';
+  const oceanURL = 'https://cdn.pixabay.com/audio/2022/03/16/audio_9fa4087c3b.mp3';
 
   stations.forEach(st => {
     const angle = (st.freq - 88) / (108 - 88) * 360;
@@ -126,34 +149,39 @@
     el.style.top = y + 'px';
     el.onclick = () => {
       player.src = st.url;
+      player.style.display = 'block';
       player.play();
       info.textContent = `🔊 Now playing: ${st.name}`;
+      weatherFrame.style.display = 'none';
     };
     dial.appendChild(el);
   });
 
-  // Authentic ambient loops (open-license)
-  const natureURL = 'https://cdn.pixabay.com/audio/2022/03/14/audio_497fa3ce5f.mp3'; // birds/forest
-  const oceanURL = 'https://cdn.pixabay.com/audio/2022/03/16/audio_9fa4087c3b.mp3';  // ocean waves
-  const weatherURL = ''; // no reliable weather stream supports <audio> directly right now
-
   document.getElementById('natureBtn').onclick = () => {
     player.src = natureURL;
+    player.style.display = 'block';
     player.play();
     info.textContent = '🌿 Now playing: Forest Ambience';
+    weatherFrame.style.display = 'none';
   };
+
   document.getElementById('oceanBtn').onclick = () => {
     player.src = oceanURL;
+    player.style.display = 'block';
     player.play();
     info.textContent = '🌊 Now playing: Ocean Waves';
+    weatherFrame.style.display = 'none';
   };
+
   document.getElementById('weatherBtn').onclick = () => {
-    info.textContent = '⚠️ Weather stream currently unavailable';
     player.pause();
-    player.src = '';
+    player.style.display = 'none';
+    info.textContent = '⛅ Now playing: Boston Weather Radio';
+    weatherFrame.style.display = 'block';
   };
 </script>
 
 </body>
 </html>
+
 
